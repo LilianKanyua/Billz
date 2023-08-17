@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8C1C1"
-    tools:context=".ui.Login">
+    tools:context=".ui.LoginActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tiluserName"
@@ -44,14 +44,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnprevious"
+        android:id="@+id/btnLoginn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="142dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="132dp"
         android:layout_marginEnd="181dp"
         android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilEmail" />
 
@@ -67,5 +68,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPasswordLog"
+        android:layout_width="385dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnLoginn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilEmail">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPasswordLog"
+            android:layout_width="351dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter Password" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/pBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnLoginn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilPasswordLog" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

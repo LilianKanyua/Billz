@@ -3,25 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.Home">
+    android:layout_height="match_parent">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnvHome"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_width="409dp"
+        android:layout_height="59dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fcvHome"
+        app:layout_constraintVertical_bias="0.81"
+        app:menu="@menu/bottom_nav_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcvHome"
         android:name="com.example.assessment3.ui.SummaryFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf=""
+        app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/fragment_summary" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,64 +1,88 @@
 package com.example.assessment3.ui
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.example.assessment3.databinding.ActivityLoginBinding
 import com.example.assessment3.model.LoginResponse
+import com.example.assessment3.viewModel.UserViewModel
+import com.example.assessment3.model.LoginRequest
 
-class Login : AppCompatActivity() {
-    lateinit var binding: ActivityLoginBinding
+
+class LoginActivity: AppCompatActivity() {
+
+    private lateinit var binding: ActivityLoginBinding
+    private val userViewModel: UserViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding=ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        setContentView(R.layout.activity_login)
-    }
 
-    override fun onResume() {
-        super.onResume()
-        binding.btnprevious.setOnClickListener {
-            var intent=Intent(this,Home::class.java)
-            startActivity(intent)
-            approveLogin()
+        binding.btnLoginn.setOnClickListener {
+            validateAndLogIn()
         }
+
+        userViewModel.errorLiveData.observe(this, Observer { error ->
+            handleError(error)
+        })
+
+        userViewModel.logLiveData.observe(this, Observer { logResponse ->
+            handleSuccessfulLogin(logResponse)
+        })
     }
 
-    fun approveLogin(){
-        val username = binding.etuserName.text.toString()
+    private fun validateAndLogIn() {
+        clearErrors()
+
         val email = binding.etEmail.text.toString()
-        var error = false
-
-        if (username.isBlank()) {
-            binding.tiluserName.error = "Your username is required"
-            error = true
-        }
+        val password = binding.etPasswordLog.text.toString()
 
         if (email.isBlank()) {
-            binding.tilEmail.error = "your email is required"
-            error = true
+            binding.tilEmail.error = "Email Address is Required"
+            return
         }
 
-        if (!error) {
-            Toast.makeText(
-                this,
-                " Hello $username your have successfully logged into your account ",
-                Toast.LENGTH_LONG
-            ).show()
+        if (password.isBlank()) {
+            binding.tilPasswordLog.error = "Password is Required"
+            return
         }
+
+        val loginRequest = LoginRequest(email = email, password = password)
+        binding.pBar.visibility = View.VISIBLE
+        userViewModel.logInUser(loginRequest)
     }
 
-    fun clearErrors() {
-        binding.tiluserName.error = null
+    private fun clearErrors() {
         binding.tilEmail.error = null
+        binding.tilPasswordLog.error = null
     }
 
-//    fun persistLogin(loginResponse: LoginResponse){
-//        val sharedPrefs=getSharedPreferences(name:"BILLZ_PREFS",Context.MODE_PRIVATE)
-//        val edition = sharedPrefs.edit()
-//        editor.putString(Constants."USER_ID",loginResponse.userId)
-//        editor.putString(Constants."ACCESS_TOKEN",LoginResponse)
-//
-//    }
+    private fun handleError(errorMessage: String) {
+        binding.pBar.visibility = View.GONE
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+    }
+
+    private fun handleSuccessfulLogin(loginResponse: LoginResponse) {
+        persistLogIn(loginResponse)
+        binding.pBar.visibility = View.GONE
+        Toast.makeText(this, loginResponse.message, Toast.LENGTH_LONG).show()
+        startActivity(Intent(this, HomeActivity::class.java))
+        finish()
+    }
+
+    private fun persistLogIn(loginResponse: LoginResponse) {
+        val sharedPrefs = getSharedPreferences("BILLZ_PREFS", Context.MODE_PRIVATE)
+        val editor = sharedPrefs.edit()
+        editor.putString("USER_ID", loginResponse.user_id)
+        editor.putString("ACCESS_TOKEN", loginResponse.access_token)
+        editor.apply()
+    }
 }
+
+

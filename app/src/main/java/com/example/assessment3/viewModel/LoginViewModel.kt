@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.assessment3.Repository.LoginRepository
+import kotlinx.coroutines.launch
 import com.example.assessment3.model.LoginRequest
 import com.example.assessment3.model.LoginResponse
-import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() { // Extend ViewModel class
     private val loginRepository = LoginRepository()

@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.assessment3.databinding.ActivityMainBinding
 import com.example.assessment3.model.RegisterRequest
+
 import com.example.assessment3.utils.Constants
 import com.example.assessment3.viewModel.UserViewModel
 
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        redirectUser()
     }
 
     override fun onResume() {
@@ -29,31 +31,32 @@ class MainActivity : AppCompatActivity() {
 
         }
         binding.btnLogin.setOnClickListener{
-            val intent=Intent(this,Login::class.java)
-            startActivity(intent)
+          validateRegistration()
         }
         userViewModel.errorLiveData.observe(this, Observer { err ->
             Toast.makeText(this, err, Toast.LENGTH_LONG).show()
             binding.pbRegister.visibility = View.GONE
         })
-        userViewModel.registerData.observe(this, Observer { regResponse ->
-            binding.pbRegister.visibility = View.GONE
-            Toast.makeText(this, regResponse.message, Toast.LENGTH_LONG).show()
 
-        })
+       userViewModel.regiLiveData.observe(this, Observer { regResponse ->
+           binding.pbRegister.visibility = View.GONE
+           Toast.makeText(this, regResponse.message, Toast.LENGTH_LONG).show()
+
+      })
     }
 
     fun validateRegistration() {
-        val username = binding.etUsername.text.toString()
+//      clearErrors()
+        val firstname = binding.etFirstName.text.toString()
         val lastName = binding.etLastName.text.toString()
         val email = binding.etEmail.text.toString()
-        val phonenumber = binding.etPhoneNumber.text.toString()
+        val phoneNumber = binding.etPhoneNumber.text.toString()
         val password = binding.etPasswordUp.text.toString()
-        val confirmpassword = binding.etConfim.text.toString()
+        val confirmPassword = binding.etConfim.text.toString()
         var error = false
 
-        if (username.isBlank()) {
-            binding.tilUsername.error = "your username is required"
+        if (firstname.isBlank()) {
+            binding.tilFirstName.error = "your username is required"
             error = true
         }
 
@@ -67,42 +70,52 @@ class MainActivity : AppCompatActivity() {
             error = true
         }
 
-        if (phonenumber.isBlank()) {
+        if (phoneNumber.isBlank()) {
             binding.tilphoneNumber.error = "Your phone number is required"
             error = true
         }
 
         if (password.isBlank()) {
-            binding.tilPasswordUP.error = "Your password is required"
+            binding.tilPassword.error = "Your password is required"
             error = true
         }
 
-        if (confirmpassword != password) {
+        if (confirmPassword != password) {
             binding.tilConfirm.error = "Your email does not match"
             error = true
         }
 
         if (!error) {
             val registerRequest = RegisterRequest(
-                firstName = username,
-                lastName = lastName,
-                email = email,
-                phoneNumber = phonenumber,
+                first_name = firstname,
+                last_name  = lastName,
+                email= email,
+                phone_number = phoneNumber,
                 password = password,
+
             )
 
             binding.pbRegister.visibility = View.VISIBLE
             userViewModel.registerUser(registerRequest)
         }
     }
-
-//    fun redirectUser(){
-// val sharedPrefs = getSharedPreferences(Constants.PREFS, Context.MODE_PRIVATE)
+    fun clearErrors() {
+        binding.tilFirstName.error = null
+        binding.tilLastName.error = null
+        binding.tilphoneNumber.error = null
+        binding.tilPassword.error = null
+        binding.tilConfirm.error = null
+    }
+    fun redirectUser(){
+ val sharedPrefs = getSharedPreferences(Constants.PREFS, Context.MODE_PRIVATE)
+        val userId = sharedPrefs.getString(Constants.USER_ID,Constants.EMPTY_STRING)
 //        val userId = sharedPrefs.getString(Constants.USER_ID, Constants.EMPTY_STRING)
-//        if userId.isNullOrBlank(){
-//      startActivity(Intent(packageContent:this))
-//        }
-//
-//
-//   }
+        if( userId.isNullOrBlank()){
+      startActivity(Intent(this,LoginActivity::class.java))
+        }
+else{
+    startActivity(Intent(this,HomeActivity::class.java))
+        }
+
+   }
 }

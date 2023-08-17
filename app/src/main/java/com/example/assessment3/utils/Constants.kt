@@ -5,5 +5,6 @@ class Constants {
         val PREFS = "BILLZ_PREFS"
         val USER_ID ="USER_ID"
         val ACCESS_TOKEN ="ACCESS_TOKEN"
+        val EMPTY_STRING = ""
     }
 }
